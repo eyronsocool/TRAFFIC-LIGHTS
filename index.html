@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inline Traffic Light</title>
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+      margin-top: 5%;
+      size: 50px;
+    }
+
+    .traffic-light-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .traffic-light {
+      width: 100px;
+      height: 300px;
+      background-color: #36393a;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+    }
+    
+    .light {
+      width: 60px;
+      height: 60px;
+      border-radius: 70%;
+      background-color: #150303;
+    }
+
+    .red.active {
+      background-color: red;
+    }
+
+    .yellow.active {
+      background-color: yellow;
+    }
+
+    .green.active {
+      background-color: rgb(7, 203, 7);
+    }
+    
+    .timer {
+      margin-top: 25px;
+      font-size: 20px;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="traffic-light-container">
+      <div class="traffic-light">
+        <div class="light red"></div>
+        <div class="light yellow"></div>
+        <div class="light green"></div>
+      </div>
+      <div class="timer" id="timer">Time left: 0 seconds</div>
+    </div>
+  </div>
+  <script>
+    const lights = document.querySelectorAll('.light');
+
+    function switchLight(color) {
+      lights.forEach(light => {
+        light.classList.remove('active');
+      });
+      
+      switch(color) {
+        case 'red':
+          lights[0].classList.add('active');
+          break;
+        case 'yellow':
+          lights[1].classList.add('active');
+          break;
+        case 'green':
+          lights[2].classList.add('active');
+          break;
+      }
+    }
+
+    function updateTimer(time) {
+      const timerElement = document.getElementById('timer');
+      timerElement.textContent = 'Time left: ' + time + ' seconds';
+    }
+
+    function randomInterval(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function changeLight(color) {
+      switchLight(color);
+      updateTimer('00');
+    }
+
+    function changeLightRandomly() {
+      const colors = ['red', 'yellow', 'green'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      switchLight(randomColor);
+      let interval = randomInterval(7, 12);
+      updateTimer(interval);
+      
+      const timer = setInterval(() => {
+        interval -= 1;
+        updateTimer(interval);
+        if (interval <= 0) {
+          clearInterval(timer);
+          changeLightRandomly();
+        }
+      }, 1000);
+    }
+
+    changeLightRandomly();
+  </script>
+</body>
+</html>
